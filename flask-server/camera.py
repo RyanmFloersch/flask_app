@@ -7,7 +7,6 @@ from cvlib.object_detection import draw_bbox
 class VideoCamera(object):
     # start the video
     def __init__(self) -> None:
-
         self.video = cv2.VideoCapture(0)
 
     # end the video
