@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react';
+import Cam from "./Cam";
+
 
 function App() {
   const [data, setData] = useState([{}])
@@ -30,12 +32,9 @@ function App() {
   // );
 
 return(
-  <div className='container'>
-    <div className='row'>
-      <h3 className='mt-5'>Live Streaming</h3>
-      <img src="{{url_for('video_feed')}}" width="100%" alt="video feed" />
-    </div>
-  </div>
+  <>
+    <Cam/>  
+  </>
 )
 
 }

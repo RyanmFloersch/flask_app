@@ -29,7 +29,7 @@ def gen_frames():
 @app.route('/')
 # run index func on default route
 def index():
-        return render_template('../client/public/index.html')
+        return render_template('../client/index.js')
 
 # Video feed route
 @app.route('/video_feed')

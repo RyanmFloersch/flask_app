@@ -1,35 +1,29 @@
-import cv2
-import cvlib as cv
-# Drawbox draws a box around detected objects
-from cvlib.object_detection import draw_bbox
+from flask import Flask, render_template, Response
+from camera import VideoCamera
 
-# https://www.youtube.com/watch?v=V62M9d8QkYM
+# Create a flask endpoint
+app = Flask(__name__)
 
-# Sets up the video capture. Allowing access to your camera.  
-video = cv2.VideoCapture(0)
+@app.route('/')
 
-while True:
-    # With the video capture unpack each frame into a variable called frame.
-    ret,frame = video.read()
+# render Cam.js in template on localhost5000 
+# def index():
+#     return render_template('Cam.js')
 
-    # detect object from the frame.
-    # use bbox to set up frame around object.
-    # label is the label for the object
-    # conf is decimal numbers for object identification
-    bbox, label, conf = cv.detect_common_objects(frame)
-    
-    # tell it where to draw the box 
-    # draw_bbox
-    #   frame - frame/image its making the box around
-    #   bbox - the box its going to draw around
-    #   label - the object label
-    output_image = draw_bbox(frame, bbox, label, conf)
+# Get the frames from the camera
+def gen(camera):
+    while True:
+        frame = camera.get_frame()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
-    # Show the image
-    cv2.imshow("Object Detection", output_image)
+# set up video_feed route
+@app.route('/video_feed')
+# 
+def video_feed():
+    return Response(gen(VideoCamera()),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
-    # If waitKey and user hits q break out of loop.
-    if cv2.waitKey(1) & 0xFF == ord("q"):
-        break
- 
+if __name__ == '__main__':
+      app.run(host='0.0.0.0', port=5000, threaded=True, use_reloader=False)
 
