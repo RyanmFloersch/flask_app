@@ -3,8 +3,10 @@ import cvlib as cv
 # Drawbox draws a box around detected objects
 from cvlib.object_detection import draw_bbox
 
+# https://www.youtube.com/watch?v=V62M9d8QkYM
+
 # Sets up the video capture. Allowing access to your camera.  
-video = cv2.VideoCapture(1)
+video = cv2.VideoCapture(0)
 
 while True:
     # With the video capture unpack each frame into a variable called frame.
@@ -29,5 +31,5 @@ while True:
     # If waitKey and user hits q break out of loop.
     if cv2.waitKey(1) & 0xFF == ord("q"):
         break
-
+ 
 
