@@ -1,52 +1,42 @@
 from flask import Flask, render_template, Response
-import cv2
+from camera import VideoCamera
 
-# Initialize the Flask app
+
+# Create the flask endpoint
 app = Flask(__name__)
 
-# *** Video Setup ***
 
-# Sets up the video capture. Allowing access to your camera.  
-video = cv2.VideoCapture(0)
-
-# Function loops over frames from the video and returns the frames as 
-# response chunkswith content type image/jpeg. 
-def gen_frames():
-        while True:
-                success, frame = video.read() # read camera frame
-                if not success:
-                        break
-                else:
-                        ret, buffer = cv2.imencode('.jpg', frame) 
-                        frame = buffer.tobytes()
-                        #concat frame one by one and show the result
-                        yield (b'--frame\r\n'
-                                b'Content-Type: image/jpeg\r\n\r\n')
-
-
-# *** Route setup ***
 # Default app route
 @app.route('/')
-# run index func on default route
-def index():
-        return render_template('../client/index.js')
 
+# run index func on default route to render server html
+def index():
+    return render_template('index.html')
+
+
+# Get the frames from the camera. 
+# Loops over each frame and returns the displayed frame and the content type
+def gen(camera):
+    while True:
+        frame = camera.get_frame()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+               
 # Video feed route
 @app.route('/video_feed')
-# run video feed func at video_feed
-# 
+
+#   
 def video_feed():
-        return Response(gen_frames(), mimetype='multipart/x-mixed-replaced; boundary=frame')
+        # Return a Response returning the gen() func to display the frames,
+        # with an http header to push the frames of the video to the web browser
+        return Response(gen(VideoCamera()),
+                         mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
-# Members API Route
-@app.route("/members")
-# Create
-def members():
-        # Returning a json of members array
-        return {"members": ["Members1", "Members2","Members3","Members4"]}
 
 # Condition to run app
-if __name__ == "__main__":
+if __name__ == '__main__':
         # debug=true for development
-        app.run(debug=True)
+        app.run(host='0.0.0.0', port=5000, threaded=True, use_reloader=False)
+
+

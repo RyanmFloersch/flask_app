@@ -7,8 +7,8 @@ app = Flask(__name__)
 @app.route('/')
 
 # render Cam.js in template on localhost5000 
-# def index():
-#     return render_template('Cam.js')
+def index():
+    return render_template('Cam.js')
 
 # Get the frames from the camera
 def gen(camera):
@@ -19,6 +19,7 @@ def gen(camera):
 
 # set up video_feed route
 @app.route('/video_feed')
+
 # 
 def video_feed():
     return Response(gen(VideoCamera()),
