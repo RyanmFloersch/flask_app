@@ -1,41 +1,21 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import Cam from "./Cam";
 
 
 function App() {
-  const [data, setData] = useState([{}])
 
-  // Fetching json data and logging it
-  useEffect(() => {
-    fetch("/members").then(
-      res => res.json()
-    ).then(
-      data => {
-        setData(data)
-        console.log(data);
-      }
-    )
-  }, [])
 
-  // If the data isn't fetched yet it displays loading while the promise hasn't resolved
-  // When it has resolved it then prints out all the members on the page. 
-  // return (
-  //   <div>
-  //     {(typeof data.members === 'undefined') ? (
-  //       <p>Loading...</p>
-  //     ) : (
-  //       data.members.map((member, i) => (
-  //         <p key={i}>{member}</p>
-  //       ))
-  //     )}
-  //   </div>
-  // );
 
-return(
-  <>
-    <Cam/>  
-  </>
-)
+
+  return (
+    <>
+      <div className='flex flex-col h-screen align-center items-center content-center justify-center text-center bg-slate-600'>
+        <p className='text-3xl text-emerald-200'>Object Detection</p>
+
+        <Cam />  
+      </div>
+    </>
+  )
 
 }
 
